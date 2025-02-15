@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌊 Ocean Literacy Quiz</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            color: white;
+            padding: 20px;
+        }
+        .container {
+            width: 90%;
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.3);
+            color: black;
+        }
+        .question {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .options button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 6px 0;
+            background: #00838f;
+            border: none;
+            color: white;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .options button:hover {
+            background: #006064;
+            transform: scale(1.05);
+        }
+        .result {
+            display: none;
+            margin-top: 20px;
+        }
+        .result h2 {
+            color: #00796b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌊 Ocean Literacy Quiz</h1>
+        <p class="question" id="questionText"></p>
+        <div class="options" id="options"></div>
+        <div class="result" id="result"></div>
+    </div>
+    
+    <script>
+        if (!localStorage.getItem("loggedInUser")) {
+            window.location.href = "login.html";
+        }
+
+        const questions = [
+            { question: "What percentage of Earth's surface is covered by oceans?", options: ["50%", "60%", "70%", "80%"], answer: "70%", explanation: "Oceans cover 70% of Earth's surface, regulating climate and life." },
+            { question: "Which ocean current is called the 'Global Conveyor Belt'?", options: ["Gulf Stream", "Thermohaline Circulation", "El Niño", "Kuroshio Current"], answer: "Thermohaline Circulation", explanation: "The Thermohaline Circulation moves heat and water, affecting global climate." },
+            { question: "What is ocean acidification mainly caused by?", options: ["Oil spills", "Plastic pollution", "CO2 absorption", "Volcanoes"], answer: "CO2 absorption", explanation: "Oceans absorb CO2, lowering pH levels and harming marine life." },
+            { question: "Which marine ecosystem has the highest biodiversity?", options: ["Deep sea vents", "Mangroves", "Coral reefs", "Open ocean"], answer: "Coral reefs", explanation: "Coral reefs support 25% of all marine life, despite covering <1% of ocean floor." },
+            { question: "Which is the largest ocean on Earth?", options: ["Indian Ocean", "Atlantic Ocean", "Pacific Ocean", "Arctic Ocean"], answer: "Pacific Ocean", explanation: "The Pacific Ocean is the largest and deepest ocean, covering more than 30% of Earth's surface." },
+            { question: "What is the primary cause of rising sea levels?", options: ["Tectonic activity", "Volcanic eruptions", "Melting ice caps", "Underwater earthquakes"], answer: "Melting ice caps", explanation: "Melting polar ice caps and glaciers due to global warming contribute to rising sea levels." },
+            { question: "Which marine animal is known as the 'canary of the sea'?", options: ["Dolphin", "Blue Whale", "Beluga Whale", "Sea Otter"], answer: "Beluga Whale", explanation: "Beluga Whales are highly vocal and often compared to canaries for their range of sounds." },
+            { question: "What is the name of the deepest part of the ocean?", options: ["Mariana Trench", "Puerto Rico Trench", "Java Trench", "Tonga Trench"], answer: "Mariana Trench", explanation: "The Mariana Trench is the deepest oceanic trench, reaching nearly 11,000 meters below sea level." },
+            { question: "What is bioluminescence?", options: ["Underwater electricity", "Glow produced by marine organisms", "Deep-sea pressure phenomenon", "Chemical pollution"], answer: "Glow produced by marine organisms", explanation: "Bioluminescence is the ability of marine organisms to produce light through chemical reactions." },
+            { question: "Which gas do phytoplankton produce that supports life on Earth?", options: ["Carbon dioxide", "Methane", "Oxygen", "Nitrogen"], answer: "Oxygen", explanation: "Phytoplankton contribute up to 50% of Earth's oxygen through photosynthesis." }
+        ];
+        
+        let currentQuestion = 0;
+        let score = 0;
+        let answers = [];
+
+        function loadQuestion() {
+            if (currentQuestion >= questions.length) {
+                showResults();
+                return;
+            }
+            document.getElementById("questionText").innerText = questions[currentQuestion].question;
+            document.getElementById("options").innerHTML = "";
+            questions[currentQuestion].options.forEach(option => {
+                let button = document.createElement("button");
+                button.innerText = option;
+                button.onclick = () => checkAnswer(option);
+                document.getElementById("options").appendChild(button);
+            });
+        }
+        
+        function checkAnswer(selected) {
+            let correct = questions[currentQuestion].answer;
+            if (selected === correct) {
+                score += 10;
+            }
+            answers.push(`<p>❓ ${questions[currentQuestion].question}<br>✅ Correct Answer: ${correct}<br>ℹ️ ${questions[currentQuestion].explanation}</p>`);
+            currentQuestion++;
+            loadQuestion();
+        }
+
+        function showResults() {
+            document.getElementById("questionText").style.display = "none";
+            document.getElementById("options").style.display = "none";
+            document.getElementById("result").innerHTML = `<h2>Quiz Completed!</h2><p>Your Score: ${score}/100</p>${answers.join("")}`;
+            document.getElementById("result").style.display = "block";
+        }
+        
+        loadQuestion();
+    </script>
+</body>
+</html>
