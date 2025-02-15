@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean Literacy Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #e0f7fa;
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px gray;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .options button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: none;
+            background: #00796b;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .options button:hover {
+            background: #004d40;
+        }
+        .timer {
+            color: red;
+            font-weight: bold;
+        }
+        .leaderboard {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ocean Literacy Quiz</h1>
+        <div id="userInput">
+            <label>Enter your name: <input type="text" id="username"></label>
+            <button onclick="startGame()">Start Quiz</button>
+        </div>
+        <div id="quiz" style="display:none;">
+            <p class="timer">Time left: <span id="timeLeft">10</span>s</p>
+            <p class="question" id="questionText"></p>
+            <div class="options" id="options"></div>
+            <p id="hint" style="display:none; color: blue;"></p>
+            <p id="explanation" style="display:none; color: green;"></p>
+        </div>
+        <div class="leaderboard" id="leaderboard" style="display:none;"></div>
+    </div>
+
+    <script>
+        const questions = [
+            { question: "What percentage of Earth's surface is covered by oceans?", options: ["50%", "60%", "70%", "80%"], answer: "70%", hint: "It's more than two-thirds.", explanation: "Oceans cover 70% of Earth's surface, regulating climate and life." },
+            { question: "Which ocean current is called the 'Global Conveyor Belt'?", options: ["Gulf Stream", "Thermohaline Circulation", "El Niño", "Kuroshio Current"], answer: "Thermohaline Circulation", hint: "It drives deep ocean currents globally.", explanation: "The Thermohaline Circulation moves heat and water, affecting climate worldwide." },
+            { question: "What is ocean acidification mainly caused by?", options: ["Oil spills", "Plastic pollution", "Carbon dioxide absorption", "Underwater volcanoes"], answer: "Carbon dioxide absorption", hint: "It's due to greenhouse gas emissions.", explanation: "Oceans absorb CO2, lowering pH levels and harming marine life." },
+            { question: "Which marine ecosystem has the highest biodiversity?", options: ["Deep sea vents", "Mangroves", "Coral reefs", "Open ocean"], answer: "Coral reefs", hint: "Called 'rainforests of the sea'.", explanation: "Coral reefs support 25% of all marine life, despite covering <1% of the ocean floor." },
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let timeLeft = 10;
+        let timer;
+        let username;
+        let leaderboard = [];
+
+        function startGame() {
+            username = document.getElementById("username").value;
+            if (!username) {
+                alert("Please enter your name to start.");
+                return;
+            }
+            document.getElementById("userInput").style.display = "none";
+            document.getElementById("quiz").style.display = "block";
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentQuestion >= questions.length) {
+                showLeaderboard();
+                return;
+            }
+            document.getElementById("hint").style.display = "none";
+            document.getElementById("explanation").style.display = "none";
+            document.getElementById("questionText").innerText = questions[currentQuestion].question;
+            document.getElementById("options").innerHTML = "";
+            
+            questions[currentQuestion].options.forEach(option => {
+                let button = document.createElement("button");
+                button.innerText = option;
+                button.onclick = () => checkAnswer(option);
+                document.getElementById("options").appendChild(button);
+            });
+
+            timeLeft = 10;
+            document.getElementById("timeLeft").innerText = timeLeft;
+            clearInterval(timer);
+            timer = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                alert("Time's up! Moving to the next question.");
+                currentQuestion++;
+                loadQuestion();
+            } else {
+                timeLeft--;
+                document.getElementById("timeLeft").innerText = timeLeft;
+            }
+        }
+
+        function checkAnswer(selected) {
+            clearInterval(timer);
+            let correct = questions[currentQuestion].answer;
+            if (selected === correct) {
+                score += 10;
+            }
+            document.getElementById("hint").innerText = "Hint: " + questions[currentQuestion].hint;
+            document.getElementById("explanation").innerText = "Explanation: " + questions[currentQuestion].explanation;
+            document.getElementById("hint").style.display = "block";
+            document.getElementById("explanation").style.display = "block";
+            setTimeout(() => {
+                currentQuestion++;
+                loadQuestion();
+            }, 3000);
+        }
+
+        function showLeaderboard() {
+            document.getElementById("quiz").style.display = "none";
+            leaderboard.push({ name: username, score: score });
+            leaderboard.sort((a, b) => b.score - a.score);
+            let leaderboardHTML = "<h2>Leaderboard</h2>";
+            leaderboard.forEach((entry, index) => {
+                leaderboardHTML += `<p>${index + 1}. ${entry.name} - ${entry.score} points</p>`;
+            });
+            document.getElementById("leaderboard").innerHTML = leaderboardHTML;
+            document.getElementById("leaderboard").style.display = "block";
+        }
+    </script>
+</body>
+</html>
