@@ -44,6 +44,10 @@ from fastapi.responses import RedirectResponse
 
 # Mount Frontend directory if exists
 frontend_dir = Path(__file__).resolve().parent.parent.parent / "frontend"
+if not frontend_dir.exists():
+    frontend_dir = Path("/var/task/frontend")
+if not frontend_dir.exists():
+    frontend_dir = Path("frontend").resolve()
 if frontend_dir.exists():
     app.mount("/app", StaticFiles(directory=str(frontend_dir), html=True), name="frontend")
 

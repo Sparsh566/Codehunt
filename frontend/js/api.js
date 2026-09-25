@@ -3,7 +3,7 @@
  * Connects frontend directly to FastAPI backend with JWT session handling.
  */
 
-const API_BASE = window.location.origin.includes(":8000") 
+const API_BASE = (window.location.origin && window.location.origin.startsWith("http")) 
   ? window.location.origin 
   : "http://127.0.0.1:8000";
 
