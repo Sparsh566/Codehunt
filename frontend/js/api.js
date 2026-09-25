@@ -190,6 +190,23 @@ const ApiClient = {
     });
   },
 
+  toggleUserDropdown(event) {
+    if (event) event.stopPropagation();
+    const menu = document.getElementById("userDropdownMenu");
+    const arrow = document.getElementById("userDropdownArrow");
+    if (!menu) return;
+    const isVisible = menu.style.display === "block";
+    menu.style.display = isVisible ? "none" : "block";
+    if (arrow) arrow.style.transform = isVisible ? "rotate(0deg)" : "rotate(180deg)";
+  },
+
+  closeUserDropdown() {
+    const menu = document.getElementById("userDropdownMenu");
+    const arrow = document.getElementById("userDropdownArrow");
+    if (menu) menu.style.display = "none";
+    if (arrow) arrow.style.transform = "rotate(0deg)";
+  },
+
   // UI Helper: sync navbar with user status
   syncNavbar() {
     const user = this.getUser();
@@ -197,18 +214,34 @@ const ApiClient = {
     if (!authContainer) return;
 
     if (user) {
-      const adminLink = (user.is_admin || user.role === 'admin') 
-        ? `<a href="admin.html" class="btn-nav-auth" style="background:rgba(0,242,254,0.15); color:var(--cyan-glow); border:1px solid var(--cyan-glow); margin-right:8px; text-decoration:none;">⚙️ Admin</a>` 
+      const adminItem = (user.is_admin || user.role === 'admin') 
+        ? `<a href="admin.html" class="user-dropdown-item" style="color:var(--cyan-glow);"><span>⚙️</span> Operations Console</a>` 
         : '';
 
       authContainer.innerHTML = `
-        ${adminLink}
-        <a href="profile.html" class="user-badge" style="text-decoration:none; cursor:pointer;" title="View Analytics & Mastery Profile">
-          <span>⚓</span>
-          <span class="username">${user.username}</span>
-          <span class="user-xp">${user.xp || 0} XP (Lvl ${user.level || 1})</span>
-        </a>
-        <button class="btn-nav-auth" style="background: rgba(239,68,68,0.2); color:#fca5a5; border:1px solid #ef4444;" onclick="ApiClient.logout()">Logout</button>
+        <div class="user-dropdown-wrapper">
+          <button class="user-badge-btn" id="userBadgeBtn" onclick="ApiClient.toggleUserDropdown(event)">
+            <span>⚓</span>
+            <span class="username">${user.username}</span>
+            <span class="user-xp">${user.xp || 0} XP (Lvl ${user.level || 1})</span>
+            <span id="userDropdownArrow" style="font-size:0.65rem; transition:transform 0.2s ease;">▼</span>
+          </button>
+          <div class="user-dropdown-menu" id="userDropdownMenu" style="display:none;">
+            <div class="user-dropdown-header">
+              <div style="font-weight:700; color:#fff; font-size:0.95rem;">${user.username}</div>
+              <div style="font-size:0.75rem; color:var(--cyan-glow); text-transform:uppercase;">${(user.role || 'Learner').replace('_', ' ')}</div>
+            </div>
+            <div class="user-dropdown-divider"></div>
+            <a href="profile.html" class="user-dropdown-item">
+              <span>📊</span> Analytics & Badges
+            </a>
+            ${adminItem}
+            <div class="user-dropdown-divider"></div>
+            <button class="user-dropdown-item user-dropdown-logout" onclick="ApiClient.logout()">
+              <span>🚪</span> Sign Out / Logout
+            </button>
+          </div>
+        </div>
       `;
     } else {
       authContainer.innerHTML = `
@@ -251,5 +284,12 @@ window.ApiClient = ApiClient;
 document.addEventListener("DOMContentLoaded", () => {
   ApiClient.syncNavbar();
   ApiClient.initAccessibility();
+
+  document.addEventListener("click", (e) => {
+    const wrapper = document.querySelector(".user-dropdown-wrapper");
+    if (wrapper && !wrapper.contains(e.target)) {
+      ApiClient.closeUserDropdown();
+    }
+  });
 });
 

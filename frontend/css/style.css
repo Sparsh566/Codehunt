@@ -147,7 +147,104 @@ h1, h2, h3, h4, h5, .brand-title {
   box-shadow: 0 6px 20px rgba(0, 242, 254, 0.5);
 }
 
-/* User Profile Badge */
+/* User Profile Badge & Dropdown */
+.user-dropdown-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.user-badge-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 6px 14px;
+  border-radius: 30px;
+  border: 1px solid var(--border-light);
+  color: var(--text-main);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  font-family: inherit;
+}
+
+.user-badge-btn:hover, .user-badge-btn.active {
+  background: rgba(0, 114, 255, 0.2);
+  border-color: var(--cyan-glow);
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.25);
+}
+
+.user-badge-btn .username {
+  font-weight: 600;
+  color: var(--cyan-glow);
+  font-size: 0.9rem;
+}
+
+.user-badge-btn .user-xp {
+  font-size: 0.8rem;
+  background: rgba(0, 242, 254, 0.15);
+  color: var(--cyan-glow);
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.user-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 220px;
+  background: #061426;
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 242, 254, 0.15);
+  backdrop-filter: blur(16px);
+  padding: 8px 0;
+  z-index: 1000;
+  animation: modal-enter 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.user-dropdown-header {
+  padding: 10px 16px;
+}
+
+.user-dropdown-divider {
+  height: 1px;
+  background: var(--border-light);
+  margin: 6px 0;
+}
+
+.user-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 16px;
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 0.88rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: var(--transition-smooth);
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.user-dropdown-item:hover {
+  background: rgba(0, 114, 255, 0.2);
+  color: var(--cyan-glow);
+  padding-left: 20px;
+}
+
+.user-dropdown-item.user-dropdown-logout {
+  color: #fca5a5;
+}
+
+.user-dropdown-item.user-dropdown-logout:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
 .user-badge {
   display: flex;
   align-items: center;
