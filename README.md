@@ -162,6 +162,17 @@ Open your browser:
 - **Interactive Swagger API Docs**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 - **API Health Check**: [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
 
+### 5. 🔑 Pre-Seeded Accounts for Evaluators
+
+For easy testing and evaluation of all roles and privileges:
+
+| Role | Username | Password | Purpose |
+| :--- | :--- | :--- | :--- |
+| **INCOIS Administrator** | `admin` | `admin123` | Access to `/admin` Operations Console, Scenario Authoring & System KPIs |
+| **Demo Ship Captain** | `captain_vikram` | `sailor123` | Pre-populated decision history, badges, and leaderboard rankings |
+
+> 💡 *Note: Users can also register new accounts with any role (Fisherman, Ship Captain, Pirate King) directly on the Sign-In page.*
+
 ---
 
 ## 🧪 Running the Test Suite
