@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learner Profile & Analytics | Codehunt v2</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .profile-container {
+      max-width: 1000px;
+      margin: 2.5rem auto 4rem;
+      padding: 0 1.5rem;
+    }
+    .profile-hero {
+      padding: 2.2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .profile-avatar {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0072ff, #00f2fe);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.6rem;
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.4);
+    }
+    .profile-details {
+      flex: 1;
+      min-width: 250px;
+    }
+    .profile-name {
+      font-size: 2rem;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 6px;
+    }
+    .xp-meter-wrapper {
+      margin-top: 12px;
+      max-width: 450px;
+    }
+    .xp-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .xp-track {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .xp-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #0072ff, #00f2fe);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    /* Mastery Section */
+    .mastery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 2.5rem;
+    }
+    .mastery-card {
+      padding: 1.5rem;
+      text-align: left;
+    }
+    .mastery-val {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--cyan-glow);
+      font-family: 'Outfit', sans-serif;
+      margin-bottom: 4px;
+    }
+
+    /* Badges Grid */
+    .badges-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .badge-card {
+      padding: 1.2rem;
+      text-align: center;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      background: rgba(4, 16, 32, 0.7);
+      transition: var(--transition-smooth);
+    }
+    .badge-card.unlocked {
+      border-color: var(--cyan-glow);
+      background: radial-gradient(circle at top, rgba(0, 242, 254, 0.15) 0%, rgba(4, 16, 32, 0.8) 70%);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.15);
+    }
+    .badge-card.locked {
+      opacity: 0.45;
+      filter: grayscale(1);
+    }
+    .badge-icon {
+      font-size: 2.4rem;
+      margin-bottom: 8px;
+    }
+    .badge-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 4px;
+    }
+    .badge-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">
+      <div class="nav-logo">🌊</div>
+      <div>
+        <div class="nav-title">Codehunt v2</div>
+        <div class="nav-subtitle">INCOIS • Ministry of Earth Sciences</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="learn.html" class="nav-link">Learn Mode</a>
+      <a href="play.html" class="nav-link">Play Mode</a>
+      <a href="leaderboard.html" class="nav-link">Leaderboard</a>
+      <a href="profile.html" class="nav-link active">Analytics</a>
+      <div id="navAuthContainer">
+        <a href="login.html" class="btn-nav-auth" style="text-decoration:none;">Sign In</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="profile-container" id="profileContent">
+    <!-- Profile Hero Card -->
+    <div class="glass-panel profile-hero">
+      <div class="profile-avatar" id="avatarEmoji">⚓</div>
+      <div class="profile-details">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:4px;">
+          <h1 class="profile-name" id="profUsername">Loading...</h1>
+          <span class="mode-tag tag-play" id="profRoleBadge" style="margin-bottom:0;">LEARNER</span>
+        </div>
+        <div style="color: var(--text-muted); font-size: 0.92rem;" id="profRankSubtitle">
+          Global Rank #-- • Streak: 0 days 🔥
+        </div>
+        
+        <div class="xp-meter-wrapper">
+          <div class="xp-label-row">
+            <span id="profLevel">Level 1</span>
+            <span id="profXpStats">0 / 250 XP</span>
+          </div>
+          <div class="xp-track">
+            <div class="xp-bar" id="profXpBar" style="width: 0%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4-Pillar Ocean Literacy Mastery -->
+    <h2 style="font-size: 1.5rem; margin-bottom: 1rem; color: white;">INCOIS Ocean Literacy Mastery Index</h2>
+    <div class="mastery-grid">
+      <div class="glass-panel mastery-card">
+        <div style="font-size: 1.4rem; margin-bottom: 6px;">🌊</div>
+        <div class="mastery-val" id="mastConditions">0%</div>
+        <div style="font-weight:600; font-size:0.95rem; color:#fff;">Ocean Conditions</div>
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Wave height, swell frequency & wind speed reading</div>
+      </div>
+
+      <div class="glass-panel mastery-card">
+        <div style="font-size: 1.4rem; margin-bottom: 6px;">🛡️</div>
+        <div class="mastery-val" id="mastSafety">0%</div>
+        <div style="font-weight:600; font-size:0.95rem; color:#fff;">Safety Awareness</div>
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Rough sea avoidance, storm & cyclone evasion</div>
+      </div>
+
+      <div class="glass-panel mastery-card">
+        <div style="font-size: 1.4rem; margin-bottom: 6px;">🐟</div>
+        <div class="mastery-val" id="mastPfz">0%</div>
+        <div style="font-weight:600; font-size:0.95rem; color:#fff;">PFZ & SST Fronts</div>
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Potential Fishing Zone navigation & temperature gradients</div>
+      </div>
+
+      <div class="glass-panel mastery-card">
+        <div style="font-size: 1.4rem; margin-bottom: 6px;">📜</div>
+        <div class="mastery-val" id="mastCompliance">0%</div>
+        <div style="font-weight:600; font-size:0.95rem; color:#fff;">Advisory Compliance</div>
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">INCOIS High Wave & Alert color-code obedience</div>
+      </div>
+    </div>
+
+    <!-- Maritime Badges Showcase -->
+    <h2 style="font-size: 1.5rem; margin-bottom: 1rem; color: white;">Maritime Honor Badges</h2>
+    <div class="badges-grid" id="badgesContainer">
+      <div style="color:var(--text-dim); padding:1rem;">Loading badges...</div>
+    </div>
+
+    <!-- Recent Voyage Decision History -->
+    <h2 style="font-size: 1.5rem; margin-bottom: 1rem; color: white;">Recent Decision Voyages</h2>
+    <div class="glass-panel" style="padding: 1.2rem; overflow-x: auto;">
+      <table class="lb-table">
+        <thead>
+          <tr>
+            <th>Scenario</th>
+            <th>Role</th>
+            <th>Safety Result</th>
+            <th>Vessel Fate</th>
+            <th>Score Delta</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody id="historyTbody">
+          <tr><td colspan="6" style="text-align:center; color:var(--text-dim); padding:2rem;">No decision logs recorded yet. Play a scenario in Play Mode!</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    async function loadProfile() {
+      const user = ApiClient.getUser();
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      try {
+        const data = await ApiClient.request("/api/analytics/profile");
+        renderProfile(data);
+      } catch (err) {
+        document.getElementById("profUsername").innerText = "Failed to load profile data.";
+      }
+    }
+
+    function renderProfile(data) {
+      document.getElementById("profUsername").innerText = data.username;
+      document.getElementById("profRoleBadge").innerText = data.role.replace('_', ' ').toUpperCase();
+      document.getElementById("profRankSubtitle").innerText = `Global Rank #${data.global_rank} • Current Streak: ${data.current_streak} days 🔥`;
+
+      // Role Emoji
+      if (data.role === 'pirate_king') document.getElementById("avatarEmoji").innerText = "🏴‍☠️";
+      else if (data.role === 'ship_captain') document.getElementById("avatarEmoji").innerText = "🚢";
+      else document.getElementById("avatarEmoji").innerText = "🎣";
+
+      // XP Progress
+      document.getElementById("profLevel").innerText = `Level ${data.level}`;
+      const levelBase = (data.level - 1) * 250;
+      const levelTarget = data.level * 250;
+      const curXp = data.xp;
+      const pct = Math.min(100, Math.max(0, ((curXp - levelBase) / 250) * 100));
+      document.getElementById("profXpStats").innerText = `${curXp} / ${levelTarget} XP`;
+      document.getElementById("profXpBar").style.width = `${pct}%`;
+
+      // Mastery
+      document.getElementById("mastConditions").innerText = `${data.mastery.ocean_conditions_mastery}%`;
+      document.getElementById("mastSafety").innerText = `${data.mastery.safety_awareness_mastery}%`;
+      document.getElementById("mastPfz").innerText = `${data.mastery.pfz_understanding_mastery}%`;
+      document.getElementById("mastCompliance").innerText = `${data.mastery.advisory_compliance_mastery}%`;
+
+      // Badges
+      const bContainer = document.getElementById("badgesContainer");
+      bContainer.innerHTML = "";
+      data.badges.forEach(b => {
+        const card = document.createElement("div");
+        card.className = `badge-card ${b.is_unlocked ? 'unlocked' : 'locked'}`;
+        card.innerHTML = `
+          <div class="badge-icon">${b.icon}</div>
+          <div class="badge-name">${b.name}</div>
+          <div class="badge-desc">${b.description}</div>
+          <div style="font-size:0.7rem; font-weight:700; color:${b.is_unlocked ? 'var(--cyan-glow)' : 'var(--text-dim)'}; margin-top:6px;">
+            ${b.is_unlocked ? 'UNLOCKED ✨' : 'LOCKED 🔒'}
+          </div>
+        `;
+        bContainer.appendChild(card);
+      });
+
+      // Voyages
+      const tbody = document.getElementById("historyTbody");
+      if (data.recent_voyages && data.recent_voyages.length > 0) {
+        tbody.innerHTML = "";
+        data.recent_voyages.forEach(v => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td><strong>${v.scenario_title}</strong></td>
+            <td><span class="role-badge role-${v.role}">${v.role.replace('_', ' ')}</span></td>
+            <td><span style="color:${v.is_safe ? 'var(--emerald-safe)' : 'var(--coral-danger)'}; font-weight:600;">${v.is_safe ? '✅ SAFE' : '⚠️ HAZARD'}</span></td>
+            <td><small>${v.vessel_status}</small></td>
+            <td><strong style="color:${v.score_delta >= 0 ? 'var(--emerald-safe)' : 'var(--coral-danger)'};">${v.score_delta > 0 ? '+'+v.score_delta : v.score_delta}</strong></td>
+            <td><small style="color:var(--text-dim);">${v.created_at}</small></td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+    }
+
+    loadProfile();
+  </script>
+</body>
+</html>

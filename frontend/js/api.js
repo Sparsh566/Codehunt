@@ -159,6 +159,15 @@ const ApiClient = {
     return this.request("/api/leaderboard/me");
   },
 
+  // Analytics & Gamification
+  async getAnalyticsProfile() {
+    return this.request("/api/analytics/profile");
+  },
+
+  async getBadges() {
+    return this.request("/api/analytics/badges");
+  },
+
   // UI Helper: sync navbar with user status
   syncNavbar() {
     const user = this.getUser();
@@ -167,11 +176,11 @@ const ApiClient = {
 
     if (user) {
       authContainer.innerHTML = `
-        <div class="user-badge">
+        <a href="profile.html" class="user-badge" style="text-decoration:none; cursor:pointer;" title="View Analytics & Mastery Profile">
           <span>⚓</span>
           <span class="username">${user.username}</span>
           <span class="user-xp">${user.xp || 0} XP (Lvl ${user.level || 1})</span>
-        </div>
+        </a>
         <button class="btn-nav-auth" style="background: rgba(239,68,68,0.2); color:#fca5a5; border:1px solid #ef4444;" onclick="ApiClient.logout()">Logout</button>
       `;
     } else {

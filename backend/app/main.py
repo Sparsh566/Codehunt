@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 
 from backend.app.config import settings
 from backend.app.db.init_db import init_db
-from backend.app.api import auth, learn, scenarios, decisions, leaderboard
+from backend.app.api import auth, learn, scenarios, decisions, leaderboard, analytics
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -36,6 +36,7 @@ app.include_router(learn.router)
 app.include_router(scenarios.router)
 app.include_router(decisions.router)
 app.include_router(leaderboard.router)
+app.include_router(analytics.router)
 
 from pathlib import Path
 from fastapi.responses import RedirectResponse
