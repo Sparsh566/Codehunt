@@ -1,0 +1,336 @@
+[
+  {
+    "scenario_code": "FISH-ARAB-001",
+    "role": "fisherman",
+    "title": "High Wave Alert in Potential Fishing Zone (PFZ)",
+    "location": "Veraval Offshore, Arabian Sea",
+    "narrative": "INCOIS satellite telemetry indicates a dense Potential Fishing Zone (PFZ) 18 nautical miles offshore with rich chlorophyll fronts. Concurrently, INCOIS has issued an ORANGE High Wave Alert with wave heights forecast at 3.8m and 34-knot winds.",
+    "ocean_data": {
+      "wave_height_m": 3.8,
+      "wind_speed_knots": 34.0,
+      "swell_period_sec": 14.2,
+      "sea_surface_temp_c": 28.4,
+      "pfz_zone_active": true,
+      "incois_warning_type": "high_wave",
+      "incois_alert_level": "ORANGE"
+    },
+    "options": [
+      {
+        "id": "opt_fish_venture",
+        "text": "Launch your 12m motorized trawler immediately into the PFZ to secure the fish before the storm peaks.",
+        "action_type": "reckless_harvest"
+      },
+      {
+        "id": "opt_fish_shelter",
+        "text": "Heed the INCOIS Orange High Wave Alert, postpone departure, and secure vessels within the harbor basin.",
+        "action_type": "safe_precaution"
+      },
+      {
+        "id": "opt_fish_shallow",
+        "text": "Venture just 3 nautical miles into coastal shoals to drop gillnets in shallow water.",
+        "action_type": "hazardous_compromise"
+      }
+    ],
+    "recommended_action_id": "opt_fish_shelter",
+    "consequences": {
+      "opt_fish_shelter": {
+        "is_safe": true,
+        "score_delta": 100,
+        "vessel_status": "Vessel Secure in Harbor",
+        "xp_awarded": 150,
+        "feedback_rule": "Safe decision: Obeying the INCOIS Orange Alert prevented capsize from 3.8m rough waves. Gear and crew remain safe.",
+        "resource_impact": { "fuel_burn": "zero", "catch_yield": "none", "crew_morale": "high" }
+      },
+      "opt_fish_venture": {
+        "is_safe": false,
+        "score_delta": -120,
+        "vessel_status": "Severe Capsize / Hull Damage",
+        "xp_awarded": 15,
+        "feedback_rule": "Dangerous maritime violation: Small motorized fishing boats (<15m) operating in >3.5m waves during an active Orange High Wave Alert face critical risk of rolling and capsizing.",
+        "resource_impact": { "fuel_burn": "heavy", "catch_yield": "lost_at_sea", "crew_morale": "critical" }
+      },
+      "opt_fish_shallow": {
+        "is_safe": false,
+        "score_delta": -70,
+        "vessel_status": "Torn Nets / Keel Grounding",
+        "xp_awarded": 30,
+        "feedback_rule": "Hazardous action: High swell periods (14.2s) cause shoaling breakers near shallow coastlines, generating breaking waves that shred nets and ground hulls.",
+        "resource_impact": { "fuel_burn": "moderate", "catch_yield": "ruined_nets", "crew_morale": "poor" }
+      }
+    }
+  },
+  {
+    "scenario_code": "FISH-MAHA-002",
+    "role": "fisherman",
+    "title": "Optimal PFZ Navigation in Calm Ocean State",
+    "location": "Ratnagiri Coast, Maharashtra",
+    "narrative": "INCOIS Ocean State Forecast reports calm seas with 1.1m waves and light winds of 10 knots (GREEN status). A validated PFZ advisory shows a strong sea surface temperature (SST) thermal boundary 12 nautical miles southwest with high pelagic fish concentration.",
+    "ocean_data": {
+      "wave_height_m": 1.1,
+      "wind_speed_knots": 10.0,
+      "swell_period_sec": 8.5,
+      "sea_surface_temp_c": 27.8,
+      "pfz_zone_active": true,
+      "incois_warning_type": "none",
+      "incois_alert_level": "GREEN"
+    },
+    "options": [
+      {
+        "id": "opt_navigate_pfz",
+        "text": "Chart direct GPS coordinates to the INCOIS PFZ line, deploying circle nets at the thermal front.",
+        "action_type": "optimal_pfz_harvest"
+      },
+      {
+        "id": "opt_fish_blind",
+        "text": "Ignore the PFZ advisory and steam north randomly searching for bird flocks.",
+        "action_type": "inefficient_search"
+      },
+      {
+        "id": "opt_overharvest_juveniles",
+        "text": "Deploy bottom trawlers with illegal small-mesh nets across shallow nearshore nursery grounds.",
+        "action_type": "destructive_fishing"
+      }
+    ],
+    "recommended_action_id": "opt_navigate_pfz",
+    "consequences": {
+      "opt_navigate_pfz": {
+        "is_safe": true,
+        "score_delta": 110,
+        "vessel_status": "Vessel Optimal / Hold Full",
+        "xp_awarded": 160,
+        "feedback_rule": "Exemplary navigation: Navigating directly to the INCOIS PFZ line reduced fuel expenditure by 40% and maximized high-value catch under safe sea conditions.",
+        "resource_impact": { "fuel_burn": "efficient", "catch_yield": "bumper_catch", "crew_morale": "excellent" }
+      },
+      "opt_fish_blind": {
+        "is_safe": true,
+        "score_delta": 20,
+        "vessel_status": "Vessel Intact / Low Catch",
+        "xp_awarded": 40,
+        "feedback_rule": "Suboptimal: Sea was safe, but ignoring INCOIS PFZ coordinates resulted in high diesel consumption and negligible catch.",
+        "resource_impact": { "fuel_burn": "excessive", "catch_yield": "low", "crew_morale": "frustrated" }
+      },
+      "opt_overharvest_juveniles": {
+        "is_safe": false,
+        "score_delta": -90,
+        "vessel_status": "Fisheries Regulatory Violation",
+        "xp_awarded": 10,
+        "feedback_rule": "Ecological violation: Trawling nursery grounds depletes juvenile marine breeding stocks and breaches Ministry of Fisheries sustainable conservation rules.",
+        "resource_impact": { "fuel_burn": "heavy", "catch_yield": "unsold_juveniles", "crew_morale": "fined" }
+      }
+    }
+  },
+  {
+    "scenario_code": "CAPT-BOB-003",
+    "role": "ship_captain",
+    "title": "Severe Cyclonic Storm Track Diversion",
+    "location": "Paradip Corridor, Bay of Bengal",
+    "narrative": "You are commanding a 180m container ship en route to Paradip Port. INCOIS and IMD have upgraded Cyclone Bulletin to a RED ALERT: 5.4m wave height, 52-knot sustained winds, and central barometric pressure dropping rapidly along your projected sea lane.",
+    "ocean_data": {
+      "wave_height_m": 5.4,
+      "wind_speed_knots": 52.0,
+      "swell_period_sec": 16.0,
+      "sea_surface_temp_c": 29.6,
+      "pfz_zone_active": false,
+      "incois_warning_type": "cyclone",
+      "incois_alert_level": "RED"
+    },
+    "options": [
+      {
+        "id": "opt_divert_south",
+        "text": "Alter course 60 degrees southeast into navigable storm semicircle, reducing speed to ride out swell.",
+        "action_type": "heavy_weather_diversion"
+      },
+      {
+        "id": "opt_push_ahead",
+        "text": "Maintain full steam directly along the original schedule to arrive before port closure.",
+        "action_type": "storm_run"
+      },
+      {
+        "id": "opt_anchor_roadstead",
+        "text": "Drop anchor in the open port roadstead just outside the harbor breakwater.",
+        "action_type": "hazardous_anchorage"
+      }
+    ],
+    "recommended_action_id": "opt_divert_south",
+    "consequences": {
+      "opt_divert_south": {
+        "is_safe": true,
+        "score_delta": 120,
+        "vessel_status": "Vessel & Cargo Secure",
+        "xp_awarded": 180,
+        "feedback_rule": "Masterful seamanship: Diverting around the dangerous semicircle prevented parametric rolling, cargo shift, and catastrophic structural failure from 5.4m seas.",
+        "resource_impact": { "fuel_burn": "additional_15_percent", "cargo_loss": "zero", "crew_morale": "confident" }
+      },
+      "opt_push_ahead": {
+        "is_safe": false,
+        "score_delta": -150,
+        "vessel_status": "Catastrophic Cargo Loss / Structural Cracks",
+        "xp_awarded": 20,
+        "feedback_rule": "Catastrophic error: Steaming into 52-knot winds and extreme swell induces green water on deck, container loss overboard, and possible rudder loss.",
+        "resource_impact": { "fuel_burn": "maximum", "cargo_loss": "severe_damage", "crew_morale": "panic" }
+      },
+      "opt_anchor_roadstead": {
+        "is_safe": false,
+        "score_delta": -110,
+        "vessel_status": "Anchor Dragging / Collision Risk",
+        "xp_awarded": 25,
+        "feedback_rule": "Fatal anchoring error: In >5m storm seas and soft seabeds, holding ground fails; anchor dragging leads to grounding or collisions with offshore buoys.",
+        "resource_impact": { "fuel_burn": "idling", "cargo_loss": "drag_damage", "crew_morale": "distressed" }
+      }
+    }
+  },
+  {
+    "scenario_code": "CAPT-GUJ-004",
+    "role": "ship_captain",
+    "title": "Tidal Bore & Under-Keel Clearance in Shallow Channel",
+    "location": "Gulf of Khambhat, Gujarat",
+    "narrative": "Approaching a tidal navigation channel during spring tide. INCOIS Ocean State Forecast indicates 2.8m tidal currents with high swell period of 15 seconds. Current vessel draft is 8.2m, and surveyed channel depth at low water is only 8.8m.",
+    "ocean_data": {
+      "wave_height_m": 2.2,
+      "wind_speed_knots": 22.0,
+      "swell_period_sec": 15.0,
+      "sea_surface_temp_c": 27.5,
+      "pfz_zone_active": false,
+      "incois_warning_type": "swell_surge",
+      "incois_alert_level": "YELLOW"
+    },
+    "options": [
+      {
+        "id": "opt_wait_high_tide",
+        "text": "Hold vessel at designated deepwater anchorage until the incoming high tide window adds 3.5m clearance.",
+        "action_type": "tidal_window_navigation"
+      },
+      {
+        "id": "opt_cross_low_tide",
+        "text": "Attempt the shallow channel at low water to make berth on time, relying on the 0.6m static clearance.",
+        "action_type": "grounding_risk"
+      }
+    ],
+    "recommended_action_id": "opt_wait_high_tide",
+    "consequences": {
+      "opt_wait_high_tide": {
+        "is_safe": true,
+        "score_delta": 95,
+        "vessel_status": "Safe Transit Completed",
+        "xp_awarded": 140,
+        "feedback_rule": "Prudent navigation: Swell pitching and vessel squat in shallow channels reduce Under-Keel Clearance (UKC). Waiting for high water guaranteed safe entry.",
+        "resource_impact": { "fuel_burn": "minimal", "schedule_delay": "2_hours", "crew_morale": "calm" }
+      },
+      "opt_cross_low_tide": {
+        "is_safe": false,
+        "score_delta": -100,
+        "vessel_status": "Vessel Grounded on Sandbar",
+        "xp_awarded": 20,
+        "feedback_rule": "Severe grounding: Squat effect and 15s swell heave absorbed the narrow 0.6m margin, causing bottom impact and oil boom deployment.",
+        "resource_impact": { "fuel_burn": "stalled", "schedule_delay": "36_hours_salvage", "crew_morale": "demoralized" }
+      }
+    }
+  },
+  {
+    "scenario_code": "PIRATE-KERA-005",
+    "role": "pirate_king",
+    "title": "Treasure Cove Escape: Rip Currents & 15s Swell Surge",
+    "location": "Smuggler's Headland, Kovalam, Kerala",
+    "narrative": "You are the Pirate King commanding the Black Corsair schooner with legendary gold aboard. Royal naval cutters are tracking the coast, but INCOIS has issued a YELLOW Alert: fierce 15-second swell surges and sudden bathymetric rip currents around the rocky headland cove.",
+    "ocean_data": {
+      "wave_height_m": 2.2,
+      "wind_speed_knots": 18.0,
+      "swell_period_sec": 15.0,
+      "sea_surface_temp_c": 28.1,
+      "pfz_zone_active": false,
+      "incois_warning_type": "rip_current",
+      "incois_alert_level": "YELLOW"
+    },
+    "options": [
+      {
+        "id": "opt_sail_deep_trench",
+        "text": "Navigate through the surveyed deepwater channel into open ocean, utilizing the offshore rip current jet to outrun naval cutters safely.",
+        "action_type": "cunning_seamanship"
+      },
+      {
+        "id": "opt_beach_breakers",
+        "text": "Ram the schooner straight across the shallow shore-break sandbars to hide behind the resort cliffs.",
+        "action_type": "reckless_wreck"
+      },
+      {
+        "id": "opt_anchor_under_cliffs",
+        "text": "Drop anchor right next to the jagged headland rocks in the rip zone.",
+        "action_type": "rip_current_hazard"
+      }
+    ],
+    "recommended_action_id": "opt_sail_deep_trench",
+    "consequences": {
+      "opt_sail_deep_trench": {
+        "is_safe": true,
+        "score_delta": 115,
+        "vessel_status": "Flagship Intact / Treasure Safe / Escaped",
+        "xp_awarded": 170,
+        "feedback_rule": "Legendary Pirate Navigation: Understanding how rip currents accelerate seaward through deep channels let you slingshot your ship into open water without getting smashed on headland rocks.",
+        "resource_impact": { "pirate_infamy": "+200", "hull_integrity": "100%", "treasure_secured": "100_percent" }
+      },
+      "opt_beach_breakers": {
+        "is_safe": false,
+        "score_delta": -120,
+        "vessel_status": "Schooner Smashed on Sandbar / Plunging Breakers",
+        "xp_awarded": 15,
+        "feedback_rule": "Disastrous beaching: 15s swell period generates violent plunging breakers in shallow water, snapping the keel and scattering gold across the surf.",
+        "resource_impact": { "pirate_infamy": "-100", "hull_integrity": "wrecked", "treasure_secured": "lost_to_the_deep" }
+      },
+      "opt_anchor_under_cliffs": {
+        "is_safe": false,
+        "score_delta": -90,
+        "vessel_status": "Rudder Crushed Against Headland Rocks",
+        "xp_awarded": 20,
+        "feedback_rule": "Fatal anchoring error: Rip current undertows and headland backwash smash anchored hulls into the rocky cliffs.",
+        "resource_impact": { "pirate_infamy": "-50", "hull_integrity": "30%", "treasure_secured": "captured" }
+      }
+    }
+  },
+  {
+    "scenario_code": "PIRATE-LAKS-006",
+    "role": "pirate_king",
+    "title": "Atoll Labyrinth: Shallow Coral Garden Navigation",
+    "location": "Kavaratti Atoll Lagoon, Lakshadweep",
+    "narrative": "Seeking a hidden anchorage within the atoll lagoon. INCOIS Ocean State Forecast indicates spring low tide with only 1.2m water over shallow reef pinnacles. The lagoon water is crystal clear at 31.8°C (Coral Bleaching Watch).",
+    "ocean_data": {
+      "wave_height_m": 0.8,
+      "wind_speed_knots": 8.0,
+      "swell_period_sec": 9.0,
+      "sea_surface_temp_c": 31.8,
+      "pfz_zone_active": false,
+      "incois_warning_type": "coral_bleaching",
+      "incois_alert_level": "YELLOW"
+    },
+    "options": [
+      {
+        "id": "opt_use_natural_pass",
+        "text": "Send a lookout to the crow's nest to spot the deep turquoise sand pass, anchoring only on sandy seabed clear of coral gardens.",
+        "action_type": "master_buccaneer_navigation"
+      },
+      {
+        "id": "opt_plow_reef",
+        "text": "Full sail across the brown coral reef flats at low tide, dragging the iron anchor through the coral garden.",
+        "action_type": "destructive_blunder"
+      }
+    ],
+    "recommended_action_id": "opt_use_natural_pass",
+    "consequences": {
+      "opt_use_natural_pass": {
+        "is_safe": true,
+        "score_delta": 105,
+        "vessel_status": "Anchored in Deep Sand Channel / Reef Intact",
+        "xp_awarded": 160,
+        "feedback_rule": "True King of the Seas: A true pirate knows the sea's anatomy! Reading water color (turquoise = deep sand channel, brown = shallow coral head) kept your ship afloat and preserved the fragile reef ecosystem.",
+        "resource_impact": { "pirate_infamy": "+150", "hull_integrity": "100%", "crew_loyalty": "maximum" }
+      },
+      "opt_plow_reef": {
+        "is_safe": false,
+        "score_delta": -115,
+        "vessel_status": "Keel Ripped Open on Massive Coral Head",
+        "xp_awarded": 15,
+        "feedback_rule": "Catastrophic navigation: Hard staghorn and brain corals tear through wooden hulls at low tide, stranding the vessel and destroying marine habitat.",
+        "resource_impact": { "pirate_infamy": "-120", "hull_integrity": "flooded", "crew_loyalty": "mutinous" }
+      }
+    }
+  }
+]

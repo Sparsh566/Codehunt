@@ -3,71 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ocean Literacy Quiz</title>
+    <title>🌊 Ocean Literacy Quiz</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             text-align: center;
-            background-color: #e0f7fa;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            color: white;
+            padding: 20px;
         }
         .container {
-            width: 50%;
+            width: 90%;
+            max-width: 500px;
             margin: auto;
             background: white;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px gray;
+            border-radius: 12px;
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.3);
+            color: black;
+        }
+        h1 {
+            color: #004d40;
+            font-weight: 600;
+        }
+        input {
+            padding: 10px;
+            border: 2px solid #00796b;
+            border-radius: 5px;
+            width: 80%;
+            text-align: center;
+            font-size: 16px;
+        }
+        button {
+            background: #00796b;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #004d40;
+            transform: scale(1.1);
         }
         .question {
             font-size: 18px;
-            margin-bottom: 10px;
+            font-weight: bold;
+            margin-bottom: 15px;
         }
         .options button {
             display: block;
             width: 100%;
-            padding: 10px;
-            margin: 5px 0;
+            padding: 12px;
+            margin: 6px 0;
+            background: #00838f;
             border: none;
-            background: #00796b;
             color: white;
-            border-radius: 5px;
+            border-radius: 6px;
+            font-size: 16px;
             cursor: pointer;
+            transition: 0.3s;
         }
         .options button:hover {
-            background: #004d40;
+            background: #006064;
+            transform: scale(1.05);
         }
         .timer {
             color: red;
             font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+            animation: blink 1s infinite alternate;
         }
-        .leaderboard {
+        @keyframes blink {
+            0% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+        .leaderboard, .result {
             margin-top: 20px;
+            text-align: left;
+        }
+        .home-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #d32f2f;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .home-btn:hover {
+            background: #b71c1c;
+            transform: scale(1.05);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Ocean Literacy Quiz</h1>
+        <h1>🌊 Ocean Literacy Quiz</h1>
         <div id="userInput">
             <label>Enter your name: <input type="text" id="username"></label>
             <button onclick="startGame()">Start Quiz</button>
         </div>
         <div id="quiz" style="display:none;">
-            <p class="timer">Time left: <span id="timeLeft">10</span>s</p>
+            <p class="timer">⏳ Time left: <span id="timeLeft">10</span>s</p>
             <p class="question" id="questionText"></p>
             <div class="options" id="options"></div>
-            <p id="hint" style="display:none; color: blue;"></p>
-            <p id="explanation" style="display:none; color: green;"></p>
         </div>
-        <div class="leaderboard" id="leaderboard" style="display:none;"></div>
+        <div id="result" class="result" style="display:none;"></div>
+        <button class="home-btn" id="homeBtn" style="display:none;" onclick="restartQuiz()">🏠 Back to Home</button>
     </div>
 
     <script>
         const questions = [
-            { question: "What percentage of Earth's surface is covered by oceans?", options: ["50%", "60%", "70%", "80%"], answer: "70%", hint: "It's more than two-thirds.", explanation: "Oceans cover 70% of Earth's surface, regulating climate and life." },
-            { question: "Which ocean current is called the 'Global Conveyor Belt'?", options: ["Gulf Stream", "Thermohaline Circulation", "El Niño", "Kuroshio Current"], answer: "Thermohaline Circulation", hint: "It drives deep ocean currents globally.", explanation: "The Thermohaline Circulation moves heat and water, affecting climate worldwide." },
-            { question: "What is ocean acidification mainly caused by?", options: ["Oil spills", "Plastic pollution", "Carbon dioxide absorption", "Underwater volcanoes"], answer: "Carbon dioxide absorption", hint: "It's due to greenhouse gas emissions.", explanation: "Oceans absorb CO2, lowering pH levels and harming marine life." },
-            { question: "Which marine ecosystem has the highest biodiversity?", options: ["Deep sea vents", "Mangroves", "Coral reefs", "Open ocean"], answer: "Coral reefs", hint: "Called 'rainforests of the sea'.", explanation: "Coral reefs support 25% of all marine life, despite covering <1% of the ocean floor." },
+            { question: "🌎 What percentage of Earth's surface is covered by oceans?", options: ["50%", "60%", "70%", "80%"], answer: "70%", explanation: "Oceans cover 70% of Earth's surface, regulating climate and life." },
+            { question: "🌊 Which ocean current is called the 'Global Conveyor Belt'?", options: ["Gulf Stream", "Thermohaline Circulation", "El Niño", "Kuroshio Current"], answer: "Thermohaline Circulation", explanation: "The Thermohaline Circulation moves heat and water, affecting global climate." },
+            { question: "🦠 What is ocean acidification mainly caused by?", options: ["Oil spills", "Plastic pollution", "CO2 absorption", "Volcanoes"], answer: "CO2 absorption", explanation: "Oceans absorb CO2, lowering pH levels and harming marine life." },
+            { question: "🐠 Which marine ecosystem has the highest biodiversity?", options: ["Deep sea vents", "Mangroves", "Coral reefs", "Open ocean"], answer: "Coral reefs", explanation: "Coral reefs support 25% of all marine life, despite covering <1% of ocean floor." }
         ];
 
         let currentQuestion = 0;
@@ -75,12 +136,12 @@
         let timeLeft = 10;
         let timer;
         let username;
-        let leaderboard = [];
+        let answers = [];
 
         function startGame() {
             username = document.getElementById("username").value;
             if (!username) {
-                alert("Please enter your name to start.");
+                alert("🌟 Please enter your name to start!");
                 return;
             }
             document.getElementById("userInput").style.display = "none";
@@ -90,11 +151,9 @@
 
         function loadQuestion() {
             if (currentQuestion >= questions.length) {
-                showLeaderboard();
+                showResults();
                 return;
             }
-            document.getElementById("hint").style.display = "none";
-            document.getElementById("explanation").style.display = "none";
             document.getElementById("questionText").innerText = questions[currentQuestion].question;
             document.getElementById("options").innerHTML = "";
             
@@ -112,43 +171,33 @@
         }
 
         function updateTimer() {
-            if (timeLeft <= 0) {
-                clearInterval(timer);
-                alert("Time's up! Moving to the next question.");
-                currentQuestion++;
-                loadQuestion();
-            } else {
+            if (timeLeft > 0) {
                 timeLeft--;
                 document.getElementById("timeLeft").innerText = timeLeft;
+            } else {
+                clearInterval(timer);
+                checkAnswer(""); // Move to the next question if time runs out
             }
         }
 
         function checkAnswer(selected) {
             clearInterval(timer);
             let correct = questions[currentQuestion].answer;
-            if (selected === correct) {
-                score += 10;
-            }
-            document.getElementById("hint").innerText = "Hint: " + questions[currentQuestion].hint;
-            document.getElementById("explanation").innerText = "Explanation: " + questions[currentQuestion].explanation;
-            document.getElementById("hint").style.display = "block";
-            document.getElementById("explanation").style.display = "block";
-            setTimeout(() => {
-                currentQuestion++;
-                loadQuestion();
-            }, 3000);
+            if (selected === correct) score += 10;
+            answers.push(`${questions[currentQuestion].question} <br> ✅ Correct: ${correct} <br> ℹ️ ${questions[currentQuestion].explanation}<br><br>`);
+            currentQuestion++;
+            loadQuestion();
         }
 
-        function showLeaderboard() {
+        function showResults() {
             document.getElementById("quiz").style.display = "none";
-            leaderboard.push({ name: username, score: score });
-            leaderboard.sort((a, b) => b.score - a.score);
-            let leaderboardHTML = "<h2>Leaderboard</h2>";
-            leaderboard.forEach((entry, index) => {
-                leaderboardHTML += `<p>${index + 1}. ${entry.name} - ${entry.score} points</p>`;
-            });
-            document.getElementById("leaderboard").innerHTML = leaderboardHTML;
-            document.getElementById("leaderboard").style.display = "block";
+            document.getElementById("result").innerHTML = `<h2>Quiz Completed!</h2><p>Your Score: ${score}</p>${answers.join("")}`;
+            document.getElementById("result").style.display = "block";
+            document.getElementById("homeBtn").style.display = "block";
+        }
+
+        function restartQuiz() {
+            location.reload();
         }
     </script>
 </body>

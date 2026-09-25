@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Codehunt v2 — Ocean Literacy Decision Platform | INCOIS</title>
+  <meta name="description" content="Interactive gamified approach to ocean literacy and role-based maritime decision training under simulated INCOIS ocean telemetry.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- INCOIS Advisory Ticker -->
+  <div style="background: rgba(0, 114, 255, 0.25); border-bottom: 1px solid var(--border-glass); padding: 6px 1rem; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--cyan-glow);">
+    <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981; animation: pulse-danger 1.5s infinite;"></span>
+    <strong>INCOIS LIVE TELEMETRY FEED:</strong> Ocean State Forecast Buoy Network Active • High Wave Warning System Operational • Coastal PFZ Advisories Synchronized
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">
+      <div class="nav-logo">🌊</div>
+      <div>
+        <div class="nav-title">Codehunt v2</div>
+        <div class="nav-subtitle">INCOIS • Ministry of Earth Sciences</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active">Home</a>
+      <a href="learn.html" class="nav-link">Learn Mode</a>
+      <a href="play.html" class="nav-link">Play Mode</a>
+      <a href="leaderboard.html" class="nav-link">Leaderboard</a>
+      <div id="navAuthContainer">
+        <a href="login.html" class="btn-nav-auth" style="text-decoration:none;">Sign In</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero-section">
+    <div class="hero-badge">
+      <span>🇮🇳</span> SIH 1660 • UN Ocean Decade Collaborative Centre (INCOIS)
+    </div>
+    <h1 class="hero-title">
+      Turn Ocean Data into <br><span>Decisions with Real Consequences</span>
+    </h1>
+    <p class="hero-description">
+      Step into the boots of a commercial fisherman, sea captain, or high-seas pirate king. Interpret live ocean state advisories, wave heights, and thermal fronts to survive and thrive.
+    </p>
+
+    <!-- Real-time INCOIS Buoy Preview -->
+    <div class="glass-panel" style="max-width: 850px; margin: 0 auto 3rem; padding: 1.5rem; text-align: left;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 1.2rem;">📡</span>
+          <strong id="buoyStationName" style="color: var(--cyan-glow);">Veraval Offshore Buoy (Arabian Sea)</strong>
+        </div>
+        <span class="tag-play" id="buoyAlertTag" style="margin-bottom:0;">ORANGE ALERT</span>
+      </div>
+      
+      <div class="telemetry-strip" style="margin: 0;" id="buoyTelemetryStrip">
+        <div class="telemetry-card">
+          <div class="telemetry-label">Significant Wave Height</div>
+          <div class="telemetry-value" id="buoyWave">3.8<span class="telemetry-unit">m</span></div>
+        </div>
+        <div class="telemetry-card">
+          <div class="telemetry-label">Sustained Wind Speed</div>
+          <div class="telemetry-value" id="buoyWind">34.0<span class="telemetry-unit">kts</span></div>
+        </div>
+        <div class="telemetry-card">
+          <div class="telemetry-label">Swell Wave Period</div>
+          <div class="telemetry-value" id="buoySwell">14.2<span class="telemetry-unit">sec</span></div>
+        </div>
+        <div class="telemetry-card">
+          <div class="telemetry-label">Sea Surface Temp</div>
+          <div class="telemetry-value" id="buoyTemp">28.4<span class="telemetry-unit">°C</span></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Dual Mode Selection -->
+  <main class="mode-grid">
+    <!-- Mode 1: Learn Mode -->
+    <div class="glass-panel mode-card">
+      <div>
+        <div class="mode-icon">📖</div>
+        <div class="mode-tag tag-learn">Interactive Curriculum</div>
+        <h2 class="mode-title">Learn Mode</h2>
+        <p class="mode-desc">
+          Test and strengthen your ocean literacy foundations. Master thermohaline conveyor belts, ocean acidification, coral reefs, and marine oxygen cycles through timed questions with real-time hints and scientific explanations.
+        </p>
+        <ul style="list-style: none; margin-bottom: 1.8rem; font-size: 0.9rem; color: var(--text-muted);">
+          <li style="margin-bottom: 6px;">⏱️ 15-second timed response pressure</li>
+          <li style="margin-bottom: 6px;">💡 Dynamic hint system to assist learning</li>
+          <li style="margin-bottom: 6px;">🏆 Earn XP towards maritime ranks</li>
+        </ul>
+      </div>
+      <a href="learn.html" class="btn-mode btn-learn">
+        <span>Start Learn Mode</span> <span>→</span>
+      </a>
+    </div>
+
+    <!-- Mode 2: Play Mode -->
+    <div class="glass-panel mode-card">
+      <div>
+        <div class="mode-icon">⚓</div>
+        <div class="mode-tag tag-play">Role-Based Decision Simulation</div>
+        <h2 class="mode-title">Play Mode</h2>
+        <p class="mode-desc">
+          Take the helm as a <strong>Fisherman</strong>, <strong>Ship Captain</strong>, or <strong>Pirate King</strong>. Interpret live INCOIS ocean state forecasts, high wave alerts, and Potential Fishing Zones (PFZ). Outcomes are judged deterministically by the game engine, with AI explanations by Groq Llama-3.3.
+        </p>
+        <ul style="list-style: none; margin-bottom: 1.8rem; font-size: 0.9rem; color: var(--text-muted);">
+          <li style="margin-bottom: 6px;">🏴‍☠️ 3 Sea-Going Roles (Fisherman, Captain, Pirate King)</li>
+          <li style="margin-bottom: 6px;">⚙️ 100% Deterministic Engine (Safety, Scores, Vessel Fate)</li>
+          <li style="margin-bottom: 6px;">🤖 Groq Llama-3.3 AI Tutor in English & Hindi</li>
+        </ul>
+      </div>
+      <a href="play.html" class="btn-mode btn-play">
+        <span>Enter Ocean Command</span> <span>→</span>
+      </a>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer style="border-top: 1px solid var(--border-light); padding: 2rem 1.5rem; text-align: center; color: var(--text-dim); font-size: 0.85rem;">
+    <p style="margin-bottom: 6px;">Codehunt v2 — Built for <strong>Smart India Hackathon 2024 / 2026 (Problem Statement 1660)</strong></p>
+    <p>Ministry of Earth Sciences (MoES) • Indian National Centre for Ocean Information Services (INCOIS) • UN Ocean Decade</p>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script>
+    // Fetch live buoy telemetry snapshot on load
+    async function loadBuoyPreview() {
+      try {
+        const data = await ApiClient.getTelemetry("STN-VERAVAL");
+        if (data && data.forecast) {
+          document.getElementById("buoyStationName").innerText = `${data.station.station_name} (${data.station.zone})`;
+          document.getElementById("buoyWave").innerHTML = `${data.forecast.significant_wave_height_m}<span class="telemetry-unit">m</span>`;
+          document.getElementById("buoyWind").innerHTML = `${data.forecast.wind_speed_knots}<span class="telemetry-unit">kts</span>`;
+          document.getElementById("buoySwell").innerHTML = `${data.forecast.swell_period_sec}<span class="telemetry-unit">sec</span>`;
+          document.getElementById("buoyTemp").innerHTML = `${data.forecast.sea_surface_temp_c}<span class="telemetry-unit">°C</span>`;
+          
+          if (data.active_warning) {
+            const tag = document.getElementById("buoyAlertTag");
+            tag.innerText = `${data.active_warning.severity} ALERT`;
+            tag.className = data.active_warning.severity === 'RED' ? 'alert-banner alert-red' : 'alert-banner alert-orange';
+            tag.style.margin = "0";
+            tag.style.padding = "4px 10px";
+          }
+        }
+      } catch (err) {
+        console.warn("Using offline buoy telemetry defaults");
+      }
+    }
+    loadBuoyPreview();
+  </script>
+</body>
+</html>

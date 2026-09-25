@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learn Mode — Ocean Literacy Quiz | Codehunt v2</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .quiz-container {
+      max-width: 680px;
+      margin: 2.5rem auto 4rem;
+      padding: 2.5rem 2rem;
+      position: relative;
+    }
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .timer-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid #ef4444;
+      color: #fca5a5;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    .timer-badge.safe {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: #10b981;
+      color: #6ee7b7;
+    }
+    .progress-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 3px;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #0072ff, #00f2fe);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .question-box {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 1.5rem;
+      line-height: 1.45;
+    }
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+    .quiz-btn-option {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(4, 16, 32, 0.8);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      color: white;
+      font-size: 1rem;
+      text-align: left;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .quiz-btn-option:hover {
+      background: rgba(14, 38, 70, 0.9);
+      border-color: var(--cyan-glow);
+      transform: translateX(4px);
+    }
+    .hint-box {
+      display: none;
+      background: rgba(0, 114, 255, 0.15);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      color: #7dd3fc;
+      font-size: 0.9rem;
+      margin-bottom: 1.2rem;
+      animation: modal-enter 0.2s ease-out;
+    }
+    .btn-hint {
+      background: transparent;
+      border: none;
+      color: var(--cyan-glow);
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 1.5rem;
+      transition: var(--transition-smooth);
+    }
+    .btn-hint:hover {
+      text-shadow: 0 0 10px rgba(0, 242, 254, 0.8);
+    }
+    .result-card {
+      display: none;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">
+      <div class="nav-logo">🌊</div>
+      <div>
+        <div class="nav-title">Codehunt v2</div>
+        <div class="nav-subtitle">INCOIS • Ministry of Earth Sciences</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="learn.html" class="nav-link active">Learn Mode</a>
+      <a href="play.html" class="nav-link">Play Mode</a>
+      <a href="leaderboard.html" class="nav-link">Leaderboard</a>
+      <div id="navAuthContainer">
+        <a href="login.html" class="btn-nav-auth" style="text-decoration:none;">Sign In</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="glass-panel quiz-container" id="quizContainer">
+    <!-- Active Quiz Card -->
+    <div id="quizCard">
+      <div class="quiz-header">
+        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;" id="qCounter">Question 1 of 10</span>
+        <div class="timer-badge safe" id="timerBadge">
+          <span>⏳</span> <span id="timerText">15s</span>
+        </div>
+      </div>
+
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressFill"></div>
+      </div>
+
+      <div class="question-box" id="questionText">Loading ocean literacy curriculum...</div>
+
+      <button class="btn-hint" id="hintToggleBtn" onclick="toggleHint()">
+        <span>💡</span> Need a hint?
+      </button>
+      <div class="hint-box" id="hintBox"></div>
+
+      <div class="quiz-options" id="optionsContainer"></div>
+    </div>
+
+    <!-- Final Results Summary -->
+    <div class="result-card" id="resultCard">
+      <div style="font-size: 3.5rem; margin-bottom: 1rem;" id="resultEmoji">🏅</div>
+      <h2 style="font-size: 2rem; margin-bottom: 0.5rem;" id="resultTitle">Quiz Completed!</h2>
+      <p style="color: var(--text-muted); margin-bottom: 2rem;" id="resultSubtitle">Your ocean literacy score has been evaluated and recorded.</p>
+      
+      <div class="telemetry-strip" style="max-width: 480px; margin: 0 auto 2rem;">
+        <div class="telemetry-card">
+          <div class="telemetry-label">Score</div>
+          <div class="telemetry-value" id="scoreDisplay">0 / 100</div>
+        </div>
+        <div class="telemetry-card">
+          <div class="telemetry-label">Accuracy</div>
+          <div class="telemetry-value" id="accuracyDisplay">0%</div>
+        </div>
+        <div class="telemetry-card">
+          <div class="telemetry-label">XP Earned</div>
+          <div class="telemetry-value" id="xpDisplay">+0 XP</div>
+        </div>
+      </div>
+
+      <div style="text-align: left; background: rgba(4, 16, 32, 0.6); padding: 1.5rem; border-radius: var(--radius-md); margin-bottom: 2rem; max-height: 280px; overflow-y: auto;" id="answersReviewList"></div>
+
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+        <button class="btn-mode btn-learn" onclick="location.reload()" style="padding: 12px 24px;">🔄 Retake Quiz</button>
+        <a href="play.html" class="btn-mode btn-play" style="padding: 12px 24px;">⚓ Proceed to Play Mode</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    let questions = [];
+    let currentIdx = 0;
+    let userAnswers = [];
+    let timeLeft = 15;
+    let timerInterval = null;
+
+    async function initQuiz() {
+      try {
+        questions = await ApiClient.getLearnQuestions();
+        if (!questions || questions.length === 0) {
+          document.getElementById("questionText").innerText = "No questions found. Please seed the database.";
+          return;
+        }
+        loadQuestion(0);
+      } catch (err) {
+        document.getElementById("questionText").innerText = "Unable to connect to the backend API. Please make sure the server is running.";
+      }
+    }
+
+    function loadQuestion(idx) {
+      if (idx >= questions.length) {
+        finishQuiz();
+        return;
+      }
+      currentIdx = idx;
+      const q = questions[idx];
+
+      // Update counters & progress
+      document.getElementById("qCounter").innerText = `Question ${idx + 1} of ${questions.length} • ${q.category}`;
+      const pct = ((idx) / questions.length) * 100;
+      document.getElementById("progressFill").style.width = `${pct}%`;
+
+      // Question text
+      document.getElementById("questionText").innerText = q.question;
+
+      // Hint reset
+      const hintBox = document.getElementById("hintBox");
+      hintBox.style.display = "none";
+      hintBox.innerText = q.hint ? `💡 Hint: ${q.hint}` : "💡 No hint available for this question.";
+
+      // Options
+      const container = document.getElementById("optionsContainer");
+      container.innerHTML = "";
+      const letters = ["A", "B", "C", "D"];
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement("button");
+        btn.className = "quiz-btn-option";
+        btn.innerHTML = `<span class="opt-letter">${letters[i] || '•'}</span> <span>${opt}</span>`;
+        btn.onclick = () => selectAnswer(opt);
+        container.appendChild(btn);
+      });
+
+      // Start Countdown
+      startTimer();
+    }
+
+    function toggleHint() {
+      const h = document.getElementById("hintBox");
+      h.style.display = (h.style.display === "none" || !h.style.display) ? "block" : "none";
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      timeLeft = 15;
+      updateTimerBadge();
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerBadge();
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          selectAnswer(""); // Time expired
+        }
+      }, 1000);
+    }
+
+    function updateTimerBadge() {
+      const badge = document.getElementById("timerBadge");
+      const text = document.getElementById("timerText");
+      text.innerText = `${timeLeft}s`;
+      if (timeLeft <= 5) {
+        badge.className = "timer-badge";
+      } else {
+        badge.className = "timer-badge safe";
+      }
+    }
+
+    function selectAnswer(chosenOpt) {
+      clearInterval(timerInterval);
+      const q = questions[currentIdx];
+      userAnswers.push({
+        question_id: q.id,
+        selected_option: chosenOpt
+      });
+      loadQuestion(currentIdx + 1);
+    }
+
+    async function finishQuiz() {
+      clearInterval(timerInterval);
+      document.getElementById("quizCard").style.display = "none";
+      document.getElementById("resultCard").style.display = "block";
+
+      try {
+        const result = await ApiClient.submitQuiz(userAnswers);
+        document.getElementById("scoreDisplay").innerText = `${result.total_score} / ${result.max_score}`;
+        document.getElementById("accuracyDisplay").innerText = `${result.accuracy_percentage}%`;
+        document.getElementById("xpDisplay").innerText = `+${result.xp_earned} XP`;
+
+        if (result.accuracy_percentage >= 80) {
+          document.getElementById("resultEmoji").innerText = "🌊🏆";
+          document.getElementById("resultTitle").innerText = "Certified Ocean Scholar!";
+        } else if (result.accuracy_percentage >= 50) {
+          document.getElementById("resultEmoji").innerText = "⚓";
+          document.getElementById("resultTitle").innerText = "Promising Seafarer!";
+        } else {
+          document.getElementById("resultEmoji").innerText = "🧭";
+          document.getElementById("resultTitle").innerText = "Keep Exploring the Deep!";
+        }
+
+        // Review List
+        const list = document.getElementById("answersReviewList");
+        list.innerHTML = "<h4 style='color:var(--cyan-glow); margin-bottom:12px;'>Curriculum Breakdown:</h4>";
+        result.results.forEach((r, i) => {
+          const item = document.createElement("div");
+          item.style.marginBottom = "14px";
+          item.style.paddingBottom = "10px";
+          item.style.borderBottom = "1px solid rgba(255,255,255,0.06)";
+          item.innerHTML = `
+            <div style="font-weight:600; color:#f8fafc; font-size:0.95rem; margin-bottom:4px;">${i+1}. ${r.question}</div>
+            <div style="font-size:0.85rem; color:${r.is_correct ? '#34d399' : '#f87171'};">
+              ${r.is_correct ? '✅ Correct' : '❌ Incorrect'}: You chose "${r.selected_option || 'No Answer'}" (Correct: ${r.correct_answer})
+            </div>
+            <div style="font-size:0.82rem; color:var(--text-muted); margin-top:4px;">ℹ️ ${r.explanation}</div>
+          `;
+          list.appendChild(item);
+        });
+
+        // Sync header XP
+        ApiClient.syncNavbar();
+      } catch (err) {
+        document.getElementById("resultSubtitle").innerText = "Failed to submit answers to the backend server.";
+      }
+    }
+
+    initQuiz();
+  </script>
+</body>
+</html>

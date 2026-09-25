@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In / Register — Codehunt v2</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .auth-container {
+      max-width: 440px;
+      margin: 4rem auto;
+      padding: 2.5rem 2rem;
+    }
+    .auth-tabs {
+      display: flex;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .auth-tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-weight: 600;
+      border-bottom: 2px solid transparent;
+      transition: var(--transition-smooth);
+    }
+    .auth-tab.active {
+      color: var(--cyan-glow);
+      border-bottom-color: var(--cyan-glow);
+    }
+    .form-group {
+      margin-bottom: 1.2rem;
+      text-align: left;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(4, 16, 32, 0.8);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      color: white;
+      font-size: 0.95rem;
+      transition: var(--transition-smooth);
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: var(--cyan-glow);
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.25);
+    }
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #0072ff, #00f2fe);
+      border: none;
+      border-radius: var(--radius-sm);
+      color: #030b17;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      margin-top: 1rem;
+    }
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 242, 254, 0.4);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">
+      <div class="nav-logo">🌊</div>
+      <div>
+        <div class="nav-title">Codehunt v2</div>
+        <div class="nav-subtitle">INCOIS • Ministry of Earth Sciences</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="learn.html" class="nav-link">Learn Mode</a>
+      <a href="play.html" class="nav-link">Play Mode</a>
+      <a href="leaderboard.html" class="nav-link">Leaderboard</a>
+    </div>
+  </nav>
+
+  <div class="glass-panel auth-container">
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Sign In</div>
+      <div class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">Create Account</div>
+    </div>
+
+    <!-- Alert Message Banner -->
+    <div id="authAlert" style="display:none; padding: 10px 14px; border-radius: 6px; font-size: 0.88rem; margin-bottom: 1.2rem;"></div>
+
+    <!-- Login Form -->
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label class="form-label" for="loginUsername">Username</label>
+        <input type="text" id="loginUsername" class="form-input" placeholder="Enter your username" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn-submit" id="loginBtn">Sign In</button>
+      <div style="margin-top: 1rem; font-size: 0.82rem; color: var(--text-dim); text-align: center;">
+        Quick demo login: username <code>admin</code> / password <code>admin123</code>
+      </div>
+    </form>
+
+    <!-- Register Form -->
+    <form id="registerForm" onsubmit="handleRegister(event)" style="display:none;">
+      <div class="form-group">
+        <label class="form-label" for="regUsername">Username</label>
+        <input type="text" id="regUsername" class="form-input" placeholder="e.g. CaptainAhab" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="regEmail">Email (Optional)</label>
+        <input type="email" id="regEmail" class="form-input" placeholder="you@domain.org" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="regPassword">Password</label>
+        <input type="password" id="regPassword" class="form-input" placeholder="At least 4 characters" required minlength="4" autocomplete="new-password">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="regRole">Primary Sea Role</label>
+        <select id="regRole" class="form-input" style="background:#041020; cursor:pointer;">
+          <option value="fisherman">Fisherman (Coastal Waters & PFZ)</option>
+          <option value="ship_captain">Ship Captain (Commercial Fleet & Storms)</option>
+          <option value="pirate_king">Pirate King (Uncharted Seas & Swell)</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-submit" id="regBtn">Create Account & Set Sail</button>
+    </form>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    function switchAuthTab(tab) {
+      const loginForm = document.getElementById("loginForm");
+      const regForm = document.getElementById("registerForm");
+      const tabLogin = document.getElementById("tabLogin");
+      const tabReg = document.getElementById("tabRegister");
+      const alertBox = document.getElementById("authAlert");
+      alertBox.style.display = "none";
+
+      if (tab === 'login') {
+        loginForm.style.display = "block";
+        regForm.style.display = "none";
+        tabLogin.classList.add("active");
+        tabReg.classList.remove("active");
+      } else {
+        loginForm.style.display = "none";
+        regForm.style.display = "block";
+        tabLogin.classList.remove("active");
+        tabReg.classList.add("active");
+      }
+    }
+
+    function showAlert(msg, isError = true) {
+      const b = document.getElementById("authAlert");
+      b.style.display = "block";
+      b.innerText = msg;
+      if (isError) {
+        b.style.background = "rgba(239, 68, 68, 0.15)";
+        b.style.border = "1px solid #ef4444";
+        b.style.color = "#fca5a5";
+      } else {
+        b.style.background = "rgba(16, 185, 129, 0.15)";
+        b.style.border = "1px solid #10b981";
+        b.style.color = "#6ee7b7";
+      }
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const u = document.getElementById("loginUsername").value.trim();
+      const p = document.getElementById("loginPassword").value;
+      const btn = document.getElementById("loginBtn");
+      btn.innerText = "Signing in...";
+      btn.disabled = true;
+
+      try {
+        await ApiClient.login(u, p);
+        showAlert("Login successful! Redirecting...", false);
+        setTimeout(() => {
+          window.location.href = "play.html";
+        }, 800);
+      } catch (err) {
+        showAlert(err.message || "Invalid credentials.");
+        btn.innerText = "Sign In";
+        btn.disabled = false;
+      }
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      const u = document.getElementById("regUsername").value.trim();
+      const em = document.getElementById("regEmail").value.trim() || null;
+      const p = document.getElementById("regPassword").value;
+      const r = document.getElementById("regRole").value;
+      const btn = document.getElementById("regBtn");
+      btn.innerText = "Registering...";
+      btn.disabled = true;
+
+      try {
+        await ApiClient.register(u, p, em, r);
+        showAlert("Account created! Redirecting to command center...", false);
+        setTimeout(() => {
+          window.location.href = "play.html";
+        }, 800);
+      } catch (err) {
+        showAlert(err.message || "Registration failed.");
+        btn.innerText = "Create Account & Set Sail";
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>

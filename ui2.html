@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean Explorer Game</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #87CEEB, #4682B4);
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        #gameCanvas {
+            border: 5px solid #fff;
+            background-color: #1E90FF;
+            box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.3);
+            margin-top: 50px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .button {
+            background-color: #32CD32;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #228B22;
+        }
+        .title {
+            font-size: 40px;
+            color: white;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        .quest-text {
+            color: white;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        .character-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        .character {
+            width: 150px;
+            height: 150px;
+            margin: 10px;
+            border-radius: 10px;
+            border: 2px solid #fff;
+        }
+        #questText {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="title">Ocean Explorer</div>
+    <div class="quest-text" id="questText">Select a role to start your adventure!</div>
+
+    <div class="character-container">
+        <div class="character" id="marineBiologistCharacter">
+            <img src="https://www.anglingdirect.co.uk/media/wysiwyg/hunter_x_hunter-min.jpg" alt="Marine Biologist" width="150" height="150"/>
+        </div>
+        <div class="character" id="diverCharacter">
+            <img src="https://sketchok.com/images/articles/06-anime/002-one-piece/26/16.jpg" alt="Diver" width="150" height="150"/>
+        </div>
+        <div class="character" id="photographerCharacter">
+            <img src="https://cdn.donmai.us/original/3d/24/3d24a6a959ac8d769b6aac6fb8caa883.jpg" alt="Underwater Photographer" width="150" height="150"/>
+        </div>
+    </div>
+
+    <button class="button" onclick="startGame('marineBiologist')">FISHER MAN</button>
+    <button class="button" onclick="startGame('diver')">SHIP CAPTAIN</button>
+    <button class="button" onclick="startGame('photographer')">MARINE SCIENTIST</button>
+
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        let character = "";
+        let waveOffset = 0;
+        let fishList = [];
+
+    
+        function startGame(role) {
+            character = role;
+            document.getElementById("questText").innerText = You are now a ${role}. Let's begin your mission!;
+            setTimeout(() => {
+                displayOceanScene();
+                spawnFish();
+                displayCharacter(role);
+            }, 1500);
+        }
+
+    
+        function displayOceanScene() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            animateWaves();
+        }
+
+    
+        function animateWaves() {
+            ctx.fillStyle = "#1E90FF";
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+            waveOffset += 0.05;
+
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height / 2);
+            for (let i = 0; i < canvas.width; i++) {
+                ctx.lineTo(i, Math.sin(i * 0.05 + waveOffset) * 20 + canvas.height / 2 + 20);
+            }
+            ctx.lineTo(canvas.width, canvas.height);
+            ctx.lineTo(0, canvas.height);
+            ctx.closePath();
+            ctx.fillStyle = "#4682B4"; 
+            ctx.fill();
+            requestAnimationFrame(animateWaves);
+        }
+
+    
+        function spawnFish() {
+            for (let i = 0; i < 5; i++) {
+                let fishX = Math.random() * canvas.width;
+                let fishY = Math.random() * (canvas.height / 2) + canvas.height / 4;
+                let fishSpeed = Math.random() * 2 + 1;
+                let fish = new Image();
+                fish.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpt5lm9-WyQewk99tkOqNXRjSbgczHddSUlA&s";
+                fish.onload = function() {
+                    fishList.push({ image: fish, x: fishX, y: fishY, speed: fishSpeed });
+                    animateFish();
+                };
+            }
+        }
+
+    
+        function animateFish() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            fishList.forEach(fish => {
+                ctx.drawImage(fish.image, fish.x, fish.y, 50, 50);
+                fish.x += fish.speed;
+                if (fish.x > canvas.width) fish.x = -50; 
+            });
+            requestAnimationFrame(animateFish);
+        }
+
+    
+        function displayCharacter(role) {
+            const characterImg = new Image();
+            let charX = canvas.width / 2 - 50;
+            let charY = canvas.height / 2;
+
+            if (role === 'marineBiologist') {
+                characterImg.src = "https://www.anglingdirect.co.uk/media/wysiwyg/hunter_x_hunter-min.jpg"; 
+            } else if (role === 'diver') {
+                characterImg.src = "https://sketchok.com/images/articles/06-anime/002-one-piece/26/16.jpg"; 
+            } else if (role === 'photographer') {
+                characterImg.src = "https://cdn.donmai.us/original/3d/24/3d24a6a959ac8d769b6aac6fb8caa883.jpg"; 
+
+            characterImg.onload = function() {
+                ctx.drawImage(characterImg, charX, charY, 100, 100);
+            };
+        }
+    }
+
+    </script>
+
+</body>
+</html>

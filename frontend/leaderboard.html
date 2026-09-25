@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard — Global & Role Rankings | Codehunt v2</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .lb-container {
+      max-width: 900px;
+      margin: 2.5rem auto 4rem;
+      padding: 0 1.5rem;
+    }
+    .podium-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 2.5rem;
+    }
+    .podium-card {
+      padding: 1.8rem 1.4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .podium-rank {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .podium-1 {
+      border-color: #ffd700;
+      background: radial-gradient(circle at top, rgba(255, 215, 0, 0.15) 0%, rgba(8, 23, 44, 0.8) 70%);
+    }
+    .podium-1 .podium-rank { color: #ffd700; }
+    .podium-2 {
+      border-color: #cbd5e1;
+      background: radial-gradient(circle at top, rgba(203, 213, 225, 0.12) 0%, rgba(8, 23, 44, 0.8) 70%);
+    }
+    .podium-2 .podium-rank { color: #cbd5e1; }
+    .podium-3 {
+      border-color: #b45309;
+      background: radial-gradient(circle at top, rgba(180, 83, 9, 0.15) 0%, rgba(8, 23, 44, 0.8) 70%);
+    }
+    .podium-3 .podium-rank { color: #f59e0b; }
+
+    .lb-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    .lb-table th {
+      padding: 14px 16px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid var(--border-glass);
+    }
+    .lb-table td {
+      padding: 16px;
+      font-size: 0.95rem;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .lb-table tr:hover {
+      background: rgba(0, 114, 255, 0.08);
+    }
+    .role-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+    .role-fisherman { background: rgba(16, 185, 129, 0.15); color: var(--emerald-safe); }
+    .role-ship_captain { background: rgba(0, 242, 254, 0.15); color: var(--cyan-glow); }
+    .role-pirate_king { background: rgba(255, 215, 0, 0.15); color: var(--pirate-gold); }
+    .role-admin { background: rgba(147, 51, 234, 0.15); color: #c084fc; }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">
+      <div class="nav-logo">🌊</div>
+      <div>
+        <div class="nav-title">Codehunt v2</div>
+        <div class="nav-subtitle">INCOIS • Ministry of Earth Sciences</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="learn.html" class="nav-link">Learn Mode</a>
+      <a href="play.html" class="nav-link">Play Mode</a>
+      <a href="leaderboard.html" class="nav-link active">Leaderboard</a>
+      <div id="navAuthContainer">
+        <a href="login.html" class="btn-nav-auth" style="text-decoration:none;">Sign In</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="lb-container">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <h1 style="font-size: 2.4rem; font-weight: 800; margin-bottom: 6px;">Maritime Honor Roll</h1>
+      <p style="color: var(--text-muted);">Real-time leaderboards persisted from deterministic decision engine scores.</p>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="role-tabs" style="justify-content: center; margin-bottom: 2rem;">
+      <button class="role-tab active" id="btnFilterAll" onclick="filterLeaderboard(null)" style="flex:none; min-width:120px; justify-content:center;">All Roles</button>
+      <button class="role-tab" id="btnFilterFish" onclick="filterLeaderboard('fisherman')" style="flex:none; min-width:140px; justify-content:center;">🎣 Fisherman</button>
+      <button class="role-tab" id="btnFilterCapt" onclick="filterLeaderboard('ship_captain')" style="flex:none; min-width:140px; justify-content:center;">🚢 Ship Captain</button>
+      <button class="role-tab role-pirate" id="btnFilterPirate" onclick="filterLeaderboard('pirate_king')" style="flex:none; min-width:140px; justify-content:center;">🏴‍☠️ Pirate King</button>
+    </div>
+
+    <!-- Podium View (Top 3) -->
+    <div class="podium-grid" id="podiumContainer"></div>
+
+    <!-- Table -->
+    <div class="glass-panel" style="padding: 1rem; overflow-x: auto;">
+      <table class="lb-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Seafarer</th>
+            <th>Role</th>
+            <th>Total Score</th>
+            <th>Accuracy</th>
+            <th>Voyages</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboardTbody">
+          <tr><td colspan="6" style="text-align:center; color:var(--text-dim); padding:2rem;">Loading leaderboard standings...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    let activeFilter = null;
+
+    async function loadLeaderboard(role = null) {
+      activeFilter = role;
+      document.getElementById("btnFilterAll").className = (!role) ? 'role-tab active' : 'role-tab';
+      document.getElementById("btnFilterFish").className = (role === 'fisherman') ? 'role-tab active' : 'role-tab';
+      document.getElementById("btnFilterCapt").className = (role === 'ship_captain') ? 'role-tab active' : 'role-tab';
+      document.getElementById("btnFilterPirate").className = (role === 'pirate_king') ? 'role-tab role-pirate active' : 'role-tab role-pirate';
+
+      try {
+        const entries = await ApiClient.getLeaderboard(role);
+        renderPodium(entries.slice(0, 3));
+        renderTable(entries);
+      } catch (err) {
+        document.getElementById("leaderboardTbody").innerHTML = `<tr><td colspan="6" style="text-align:center; color:#f87171;">Failed to load leaderboard data.</td></tr>`;
+      }
+    }
+
+    function renderPodium(top3) {
+      const p = document.getElementById("podiumContainer");
+      p.innerHTML = "";
+      const classes = ["podium-1", "podium-2", "podium-3"];
+      const crowns = ["👑 1st", "🥈 2nd", "🥉 3rd"];
+
+      top3.forEach((e, idx) => {
+        const card = document.createElement("div");
+        card.className = `glass-panel podium-card ${classes[idx] || ''}`;
+        card.innerHTML = `
+          <div class="podium-rank">${crowns[idx] || `#${e.rank}`}</div>
+          <div style="font-weight:700; font-size:1.15rem; color:#fff; margin-bottom:4px;">${e.username}</div>
+          <span class="role-badge role-${e.role}">${e.role.replace('_', ' ')}</span>
+          <div style="font-size:1.6rem; font-weight:800; color:var(--cyan-glow); margin-top:10px;">${e.total_score} <span style="font-size:0.8rem; color:var(--text-muted);">pts</span></div>
+          <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Accuracy: ${e.accuracy_percentage}% • ${e.scenarios_completed} voyages</div>
+        `;
+        p.appendChild(card);
+      });
+    }
+
+    function renderTable(entries) {
+      const tbody = document.getElementById("leaderboardTbody");
+      tbody.innerHTML = "";
+      if (entries.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-dim); padding:2rem;">No seafarers registered in this role yet.</td></tr>`;
+        return;
+      }
+
+      entries.forEach(e => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>#${e.rank}</strong></td>
+          <td>
+            <div style="font-weight:600; color:white;">${e.username}</div>
+          </td>
+          <td><span class="role-badge role-${e.role}">${e.role.replace('_', ' ')}</span></td>
+          <td><strong style="color:var(--cyan-glow);">${e.total_score}</strong></td>
+          <td>${e.accuracy_percentage}%</td>
+          <td>${e.scenarios_completed}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterLeaderboard(role) {
+      loadLeaderboard(role);
+    }
+
+    loadLeaderboard();
+  </script>
+</body>
+</html>
