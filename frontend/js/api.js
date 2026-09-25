@@ -168,6 +168,28 @@ const ApiClient = {
     return this.request("/api/analytics/badges");
   },
 
+  // Admin Console Operations
+  async getAdminStats() {
+    return this.request("/api/admin/stats");
+  },
+
+  async getAdminScenarios() {
+    return this.request("/api/admin/scenarios");
+  },
+
+  async createAdminScenario(payload) {
+    return this.request("/api/admin/scenarios", {
+      method: "POST",
+      body: JSON.stringify(payload)
+    });
+  },
+
+  async toggleAdminScenario(id) {
+    return this.request(`/api/admin/scenarios/${id}/toggle`, {
+      method: "POST"
+    });
+  },
+
   // UI Helper: sync navbar with user status
   syncNavbar() {
     const user = this.getUser();
@@ -175,7 +197,12 @@ const ApiClient = {
     if (!authContainer) return;
 
     if (user) {
+      const adminLink = (user.is_admin || user.role === 'admin') 
+        ? `<a href="admin.html" class="btn-nav-auth" style="background:rgba(0,242,254,0.15); color:var(--cyan-glow); border:1px solid var(--cyan-glow); margin-right:8px; text-decoration:none;">⚙️ Admin</a>` 
+        : '';
+
       authContainer.innerHTML = `
+        ${adminLink}
         <a href="profile.html" class="user-badge" style="text-decoration:none; cursor:pointer;" title="View Analytics & Mastery Profile">
           <span>⚓</span>
           <span class="username">${user.username}</span>
@@ -188,10 +215,41 @@ const ApiClient = {
         <a href="login.html" class="btn-nav-auth" style="text-decoration:none; display:inline-block;">Sign In / Join</a>
       `;
     }
+  },
+
+  initAccessibility() {
+    const isHighContrast = localStorage.getItem("a11y_high_contrast") === "true";
+    const isLargeText = localStorage.getItem("a11y_large_text") === "true";
+
+    if (isHighContrast) document.body.classList.add("high-contrast");
+    if (isLargeText) document.body.classList.add("large-text");
+
+    const bar = document.createElement("div");
+    bar.className = "a11y-toolbar";
+    bar.innerHTML = `
+      <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">A11Y:</span>
+      <button class="a11y-btn ${isHighContrast ? 'active' : ''}" id="btnA11yContrast" title="Toggle High Contrast">Contrast</button>
+      <button class="a11y-btn ${isLargeText ? 'active' : ''}" id="btnA11yFont" title="Toggle Larger Font">Font +</button>
+    `;
+    document.body.appendChild(bar);
+
+    document.getElementById("btnA11yContrast").addEventListener("click", () => {
+      const active = document.body.classList.toggle("high-contrast");
+      localStorage.setItem("a11y_high_contrast", active);
+      document.getElementById("btnA11yContrast").classList.toggle("active", active);
+    });
+
+    document.getElementById("btnA11yFont").addEventListener("click", () => {
+      const active = document.body.classList.toggle("large-text");
+      localStorage.setItem("a11y_large_text", active);
+      document.getElementById("btnA11yFont").classList.toggle("active", active);
+    });
   }
 };
 
 window.ApiClient = ApiClient;
 document.addEventListener("DOMContentLoaded", () => {
   ApiClient.syncNavbar();
+  ApiClient.initAccessibility();
 });
+

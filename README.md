@@ -63,7 +63,9 @@ Codehunt/
 │   │   │   ├── learn.py             # Learn Mode quiz endpoints
 │   │   │   ├── scenarios.py         # Scenario listing & coastal station telemetry
 │   │   │   ├── decisions.py         # Deterministic evaluation, Groq AI & Tavily
-│   │   │   └── leaderboard.py       # Live DB rankings by role
+│   │   │   ├── leaderboard.py       # Live DB rankings by role
+│   │   │   ├── analytics.py         # 4-Pillar literacy analytics & maritime badges
+│   │   │   └── admin.py             # Admin metrics, scenario authoring & diagnostics
 │   │   ├── game_engine/             # DETERMINISTIC ENGINE (Pure Python, 0% AI)
 │   │   │   ├── evaluator.py         # Pure evaluation function (idempotent)
 │   │   │   ├── rules.py             # WMO Sea State, Beaufort Scale, role thresholds
@@ -77,7 +79,7 @@ Codehunt/
 │   │   │   ├── tavily_retriever.py  # Authoritative search (incois.gov.in filtered)
 │   │   │   └── fallback_engine.py   # Offline deterministic explanatory fallback
 │   │   ├── models/                  # SQLAlchemy ORM Models
-│   │   │   ├── user.py              # User credentials, role, XP, level
+│   │   │   ├── user.py              # User credentials, role, XP, level, badges
 │   │   │   ├── scenario.py          # ScenarioRecord & ocean telemetry
 │   │   │   ├── decision.py          # DecisionLog audit trail
 │   │   │   ├── leaderboard.py       # LeaderboardEntry rankings
@@ -88,7 +90,7 @@ Codehunt/
 │   │       └── init_db.py           # Automatic table creation & seeding
 │   ├── fixtures/
 │   │   └── scenarios.json           # 6 realistic maritime scenario fixtures
-│   └── tests/                       # 21 unit & integration tests
+│   └── tests/                       # 34 comprehensive automated tests
 │
 ├── frontend/                        # Responsive Client UI (Desktop & Mobile)
 │   ├── index.html                   # Mode Selection Hub & Live Buoy Preview
@@ -96,10 +98,12 @@ Codehunt/
 │   ├── learn.html                   # Timed Ocean Literacy Quiz
 │   ├── play.html                    # Ocean Command Simulator (Fisherman, Captain, Pirate King)
 │   ├── leaderboard.html            # Real-time Honor Roll with Podium
+│   ├── profile.html                # Learner Analytics, 4-Pillar Mastery & Badges
+│   ├── admin.html                  # INCOIS Operations Console (Scenario Authoring & KPIs)
 │   ├── css/
-│   │   └── style.css                # Deep ocean glassmorphic design system
+│   │   └── style.css                # Deep ocean glassmorphic design system + A11Y support
 │   └── js/
-│       └── api.js                   # Unified REST API client with JWT handling
+│       └── api.js                   # Unified REST API client with JWT & A11Y toolbar
 │
 ├── implementation.md                # Comprehensive Architecture Specification
 └── README.md
@@ -153,6 +157,8 @@ uvicorn backend.app.main:app --reload --port 8000
 ```
 Open your browser:
 - **Interactive Web App**: [http://127.0.0.1:8000/app/index.html](http://127.0.0.1:8000/app/index.html)
+- **Learner Profile & Badges**: [http://127.0.0.1:8000/app/profile.html](http://127.0.0.1:8000/app/profile.html)
+- **Admin Operations Console**: [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin) (or `/app/admin.html`)
 - **Interactive Swagger API Docs**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 - **API Health Check**: [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
 
@@ -160,7 +166,7 @@ Open your browser:
 
 ## 🧪 Running the Test Suite
 
-The platform includes 21 comprehensive unit and integration tests covering:
+The platform includes **34 comprehensive unit and integration tests** covering:
 - PBKDF2 JWT Authentication & Session Lifecycle
 - WMO Sea State & Beaufort Scale Classifications
 - Deterministic Evaluation Idempotency across 6 Scenarios
@@ -168,6 +174,8 @@ The platform includes 21 comprehensive unit and integration tests covering:
 - Groq AI Explanations in English & Hindi
 - Tavily Authoritative Domain Whitelisting
 - Offline Fallback Circuit Breakers
+- Learning Analytics Mastery Calculation & Dynamic Badge Unlocks
+- Admin Console KPI Aggregation & Dynamic Scenario Authoring Lifecycle
 
 Execute tests with:
 ```bash

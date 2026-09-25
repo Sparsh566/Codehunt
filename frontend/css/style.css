@@ -561,3 +561,53 @@ h1, h2, h3, h4, h5, .brand-title {
     flex-direction: column;
   }
 }
+
+/* Accessibility Support */
+body.high-contrast {
+  --bg-deep: #000000;
+  --bg-card: #050a14;
+  --bg-card-hover: #0c1a30;
+  --border-glass: #00f2fe;
+  --border-light: #ffffff;
+  --text-main: #ffffff;
+  --text-muted: #e2e8f0;
+  --text-dim: #cbd5e1;
+}
+
+body.large-text {
+  font-size: 115%;
+}
+
+.a11y-toolbar {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 999;
+  background: rgba(3, 11, 23, 0.9);
+  border: 1px solid var(--border-glass);
+  padding: 6px 12px;
+  border-radius: 30px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.a11y-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-main);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.a11y-btn:hover, .a11y-btn.active {
+  background: var(--cyan-glow);
+  color: #030b17;
+  border-color: var(--cyan-glow);
+}

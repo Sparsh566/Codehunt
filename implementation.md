@@ -214,25 +214,25 @@ Codehunt/
   - Global rankings, role filters (Fisherman Champions, Captain Navigators), daily/weekly toggles.
 
 ### Phase 5: Gamification & Learning Analytics
-- [ ] Backend progression engine: XP accumulation, Rank badges (e.g., *Novice Seafarer*, *Coastal Guardian*, *Master Oceanographer*), login streaks.
-- [ ] Analytics aggregator (`/api/analytics/profile`):
+- [x] Backend progression engine: XP accumulation, Rank badges (e.g., *Novice Seafarer*, *Coastal Guardian*, *Master Oceanographer*), login streaks.
+- [x] Analytics aggregator (`/api/analytics/profile`):
   - Aggregates `DecisionLogs` into 4 literacy pillars:
     1. *Ocean Conditions Interpretation* (wave/wind dynamics)
     2. *Safety Awareness & Disaster Response* (rough sea/tsunami protocols)
     3. *Sustainable Resource Management* (PFZ utilization without overharvesting)
     4. *Regulatory & Advisory Compliance* (INCOIS alert obedience)
-- [ ] Profile Page (`profile.html`):
+- [x] Profile Page (`profile.html`):
   - Visual mastery radar / progress bars, unlocked badges, recent voyage log.
 
 ### Phase 6: Admin Dashboard
-- [ ] Lightweight authenticated admin portal (`/admin`):
+- [x] Lightweight authenticated admin portal (`/admin`):
   - Visual Scenario Editor: Add/modify ocean conditions, role options, and correct outcomes without code modifications.
   - Analytics summary: Total decisions made, dangerous choice frequency, common misconceptions.
 
 ### Phase 7: Polish & Documentation
-- [ ] Multilingual toggle (English / Hindi).
-- [ ] Accessibility: High-contrast mode, legible font toggles, keyboard navigation.
-- [ ] SIH Documentation:
+- [x] Multilingual toggle (English / Hindi).
+- [x] Accessibility: High-contrast mode, legible font toggles, keyboard navigation.
+- [x] SIH Documentation:
   - Architecture diagrams (Mermaid).
   - Clear guide explaining how to swap the Ocean Data Adapter for live INCOIS APIs.
   - Comprehensive video demo script for judges.

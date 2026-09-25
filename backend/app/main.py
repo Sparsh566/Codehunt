@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 
 from backend.app.config import settings
 from backend.app.db.init_db import init_db
-from backend.app.api import auth, learn, scenarios, decisions, leaderboard, analytics
+from backend.app.api import auth, learn, scenarios, decisions, leaderboard, analytics, admin
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -37,6 +37,7 @@ app.include_router(scenarios.router)
 app.include_router(decisions.router)
 app.include_router(leaderboard.router)
 app.include_router(analytics.router)
+app.include_router(admin.router)
 
 from pathlib import Path
 from fastapi.responses import RedirectResponse
@@ -60,3 +61,7 @@ def health_check():
 @app.get("/", tags=["Root"])
 def root():
     return RedirectResponse(url="/app/index.html")
+
+@app.get("/admin", tags=["Root"])
+def admin_redirect():
+    return RedirectResponse(url="/app/admin.html")
